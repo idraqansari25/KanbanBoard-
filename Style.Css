@@ -1,0 +1,33 @@
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  draggedTask = ev.target;
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  const column = ev.target.closest('.column').querySelector('.task-list');
+  if (draggedTask) {
+    column.appendChild(draggedTask);
+  }
+}
+
+function addTask(inputId, columnId) {
+  const input = document.getElementById(inputId);
+  const text = input.value.trim();
+
+  if (text === '') return;
+
+  const task = document.createElement('div');
+  task.className = 'task';
+  task.draggable = true;
+  task.innerText = text;
+
+  task.addEventListener('dragstart', drag);
+
+  document.getElementById(columnId).appendChild(task);
+
+  input.value = '';
+}
