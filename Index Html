@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kanban Board</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f5f7;
+    }
+
+    h2 {
+      text-align: center;
+      padding: 10px;
+    }
+
+    .board {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      justify-content: center;
+    }
+
+    .column {
+      background: #e2e4e6;
+      border-radius: 8px;
+      width: 300px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .column h3 {
+      text-align: center;
+    }
+
+    .task {
+      background: white;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: grab;
+    }
+
+    .add-task {
+      margin-top: auto;
+      display: flex;
+      gap: 5px;
+    }
+
+    input {
+      flex: 1;
+      padding: 5px;
+    }
+
+    button {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Simple Kanban Board</h2>
+
+  <div class="board">
+    <div class="column" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3>To Do</h3>
+      <div class="task-list" id="todo"></div>
+      <div class="add-task">
+        <input type="text" id="todoInput" placeholder="New task" />
+        <button onclick="addTask('todoInput','todo')">Add</button>
+      </div>
+    </div>
+
+    <div class="column" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3>In Progress</h3>
+      <div class="task-list" id="inprogress"></div>
+      <div class="add-task">
+        <input type="text" id="progressInput" placeholder="New task" />
+        <button onclick="addTask('progressInput','inprogress')">Add</button>
+      </div>
+    </div>
+
+    <div class="column" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h3>Done</h3>
+      <div class="task-list" id="done"></div>
+      <div class="add-task">
+        <input type="text" id="doneInput" placeholder="New task" />
+        <button onclick="addTask('doneInput','done')">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let draggedTask = null;
+
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      draggedTask = ev.target;
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      const column = ev.target.closest('.column').querySelector('.task-list');
+      if (draggedTask) {
+        column.appendChild(draggedTask);
+      }
+    }
+
+    function addTask(inputId, columnId) {
+      const input = document.getElementById(inputId);
+      const text = input.value.trim();
+
+      if (text === '') return;
+
+      const task = document.createElement('div');
+      task.className = 'task';
+      task.draggable = true;
+      task.innerText = text;
+
+      task.addEventListener('dragstart', drag);
+
+      document.getElementById(columnId).appendChild(task);
+
+      input.value = '';
+    }
+  </script>
+</body>
+</html>
